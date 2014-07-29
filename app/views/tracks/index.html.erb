@@ -51,6 +51,7 @@
       <%- end %>
     </table>
 </div>
+
 <%= link_to 'New Track', params[:playlist_id].nil? ? new_track_path : new_playlist_track_path(params[:playlist_id]), class: "btn btn-primary", :style => "margin-left:95px;margin-bottom:30px"   %>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
