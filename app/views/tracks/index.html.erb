@@ -1,0 +1,175 @@
+<div class="container">
+    <% unless params[:playlist_id].nil? %>
+      <h1>Playlist <%= @playlist.name %> </h1>
+    <% else %>
+      <h1 style="float: left">Tracks </h1>
+      <span style="width: 150px; padding: 6px; float: right; margin-right: -66px;">
+        <button class="btn btn-primary" class="add_music" data-toggle="modal" data-target="#myModal">Add Music</button>
+      </span>
+      <%= form_tag(search_by_artist_path, :method => "get", class: "navbar-form", id: "search-form", style: "float:right") do %>
+          <div class="input-append">
+            <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Artist Name" %>
+            <button class="btn btn-primary" type="submit">Search </button>
+          </div>
+      <% end %>
+    <% end %>
+</div>
+
+<div class="container">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <th><b>#</b></th>
+        <th><b>Title</b></th>
+        <th><b>Artist</b></th>
+        <th><b>URL</b></th>
+        <th><b>Image</b></th>
+        <th><b>Large Image</b></th>
+        <th><b>Small Image</b></th>
+        <th><b>Via</b></th>
+        <th><b>Via URL</b></th>
+        <th><b>Background</b></th>
+        <th><b>Combined Truncated</b></th>
+      </thead>
+
+      <%- unless @tracks.nil? %>
+        <%- @tracks.each_with_index do |track,index| %>
+         <tr>
+           <td><%= index+1%>  </td>
+           <td><%= track.title%>  </td>
+           <td><%= track.artist%></td>
+           <td><%= track.url%> </td>
+           <td><%= image_tag(track.image, height: '40', width: '40') %></td>
+           <td><%#= track.large_img %> </td>
+           <td><%= track.small_img %></td>
+           <td><%= track.via %> </td>
+           <td><%= track.via_url %> </td>
+           <td><%= track.background %>   </td>
+           <td><%= track.combined_truncated %> </td>
+           <td><%= link_to image_tag("/assets/delete.jpg", height: '20', width: '20'), params[:playlist_id].nil? ? track_path(track.id) : playlist_track_path(params[:playlist_id],track.id), :method => :delete, 'data-toggle' => "tooltip", :title => "Delete"   %></td>
+         </tr>
+        <%- end %>
+      <%- end %>
+    </table>
+</div>
+<%= link_to 'New Track', params[:playlist_id].nil? ? new_track_path : new_playlist_track_path(params[:playlist_id]), class: "btn btn-primary", :style => "margin-left:95px;margin-bottom:30px"   %>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title" id="myModalLabel">Add Music</h3>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id ="song" placeholder="Search for a song or provide link...">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="next_btn">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title" id="myModalLabel">Add Music</h3>
+      </div>
+      <div class="modal-body">
+        <div class="well" style="width: 159px; padding: 10px; height: 165px;" id="song_image"> <image src='' height=144 width=137 /></div>
+        <div class="form-group">
+          <label class="sr-only">Artist</label>
+          <input type="text" class="form-control" id="artist" placeholder="Artist">
+        </div>
+        <div class="form-group">
+          <label class="sr-only">Song</label>
+          <input type="text" class="form-control" id="song_name" placeholder="Song">
+        </div>
+
+        <div class="form-group">
+          <div>
+            <%= select_tag("genre", options_from_collection_for_select(@genres, "id", "name"),:class=>"form-control") %>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submit_btn">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="load-ajax"></div>
+<div id="songs_list"></div>
+
+<script type="text/javascript">
+    $('#next_btn').click(function(){
+        var url = $('#song').val()
+        if(url == ""){
+            alert('First Enter the URL')
+        }else{
+            var target = document.getElementById('load-ajax')
+            var spinner = new Spinner().spin()
+            target.appendChild(spinner.el)
+            $('#myModal').data('bs.modal').isShown = false;
+            $.ajax({
+                type:'get',
+                url: '/add_song',
+                data: 'url='+url,
+                success: function(response){
+                    $('#artist').val(response.data['author_name'])
+                    $('#song_name').val(response.data['title'])
+                    $('#song_image img').attr('src',response.data['thumbnail_url'])
+                    $('#myModal').data('bs.modal').isShown = true
+                    target.removeChild(spinner.el);
+                    $('#myModal').modal('hide');
+                    $('#submitModal').modal('show');
+
+                },
+                error: function(){
+                    $('#myModal').data('bs.modal').isShown = true
+                    target.removeChild(spinner.el);
+                    $('#myModal').modal('hide');
+                    alert('Sorry, something has gone wrong with response. please try later')
+                }
+            })
+        }
+    })
+
+   $('#submit_btn').click(function(){
+       var url = $('#song').val()
+       var target = document.getElementById('load-ajax')
+       var spinner = new Spinner().spin()
+       target.appendChild(spinner.el)
+       $('#submitModal').data('bs.modal').isShown = false;
+
+       $.ajax({
+           type:'get',
+           url: '/add_song',
+           data: 'url='+url,
+           success: function(response){
+               $('#songs_list').append("<div class='item' style='width:200px;border:1px solid #808080; margin-bottom:10px;padding:10px'>"+response.data['html']+"</div>")
+               var container = document.querySelector('#songs_list');
+               var msnry = new Masonry( container, {
+                   // options
+                   itemSelector: '.item',
+                   "gutter" : 10
+               });
+               $('#songs_list .item iframe').height(250)
+               $('#submitModal').data('bs.modal').isShown = true
+               target.removeChild(spinner.el);
+               $('#submitModal').modal('hide');
+               window.location.href = window.location.pathname+"#songs_list"
+           },
+           error: function(){
+               $('#submitModal').data('bs.modal').isShown = true
+               target.removeChild(spinner.el);
+               $('#submitModal').modal('hide');
+               alert('Sorry, something has gone wrong with response. please try later')
+           }
+       })
+   })
+</script>

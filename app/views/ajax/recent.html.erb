@@ -1,0 +1,19 @@
+<div id="container" class="recent_tracks js-masonry" data-masonry-options='{ "columnWidth": 60, "itemSelector": ".box", "gutter" : 10 }' style="margin-left:30px;margin-top:40px">
+  <%  if @tracks.length > 0 %>
+      <% @tracks.each_with_index do |track, index| %>
+          <% unless track.image.nil? %>
+              <div class="box" style="border:1px solid #808080; margin-bottom:10px;padding:10px">
+                <div class="cover">
+                  <img src="<%= track.image %> " height="110" width="100">
+                </div>
+                <div class="song-info" id="<%= index %>">
+                  <span class="artist" style="font-size: 10"><%= track.artist %></span></br>
+                  <span class="song"><%#= track.title %></span>
+                </div>
+              </div>
+          <% end %>
+      <% end %>
+  <% else %>
+      <p> No results found </p>
+  <% end %>
+</div>

@@ -1,0 +1,164 @@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title" id="myModalLabel">Add Music</h3>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id ="song" placeholder="Search for a song or provide link...">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="next_btn">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title" id="myModalLabel">Add Music</h3>
+      </div>
+      <div class="modal-body">
+        <div class="well" style="width: 159px; padding: 10px; height: 165px;" id="song_image"> <image src='' height=144 width=137 /></div>
+        <div class="form-group">
+          <label class="sr-only">Artist</label>
+          <input type="text" class="form-control" id="artist" placeholder="Artist">
+        </div>
+        <div class="form-group">
+          <label class="sr-only">Song</label>
+          <input type="text" class="form-control" id="song_name" placeholder="Song">
+        </div>
+
+        <input type="hidden" id="provider_name" value=""/>
+        <input type="hidden" id="provider_url" value=""/>
+        <input type="hidden" id="html" value=""/>
+        <input type="hidden" id="author_name" value=""/>
+        <input type="hidden" id="author_url" value=""/>
+        <div class="form-group">
+          <div>
+            <%= select_tag("genre", options_from_collection_for_select(@genres, "id", "name"),:class=>"form-control") %>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submit_btn">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="songs_list"></div>
+
+<script type="text/javascript">
+    $('document').ready(function(){
+        $('#recent_songs').click(function(){
+            var src = $(this)
+            if(src.hasClass('active') == false){
+                var target = document.getElementById('load-ajax')
+                var spinner = new Spinner().spin()
+                target.appendChild(spinner.el)
+                $.ajax({
+                    type: 'get',
+                    url: '/recent',
+                    success: function(response){
+                        $('nav button.active').removeClass('active')
+                        src.addClass('active')
+                        $('#main').html(response)
+                        var container = document.querySelector('.recent_tracks');
+                        var msnry = new Masonry( container, {
+                            itemSelector: '.box',
+                            "gutter" : 10
+                        });
+                        target.removeChild(spinner.el);
+                    }
+                })
+            }
+        })
+    })
+    $('#next_btn').click(function(){
+        var url = $('#song').val()
+        if(url == ""){
+            alert('First Enter the URL')
+        }else{
+            var target = document.getElementById('load-ajax')
+            var spinner = new Spinner().spin()
+            target.appendChild(spinner.el)
+            $('#myModal').data('bs.modal').isShown = false;
+            $.ajax({
+                type:'get',
+                url: '/add_song',
+                data: 'url='+url,
+                success: function(response){
+                    $('#artist').val(response.data['author_name'])
+                    $('#song_name').val(response.data['title'])
+                    $('#song_image img').attr('src',response.data['thumbnail_url'])
+                    $('#provider_name').val(response.data['provider_name']);
+                    $('#provider_url').val(response.data['provider_url']);
+                    $('#html').val(response.data['html'])
+                    $('#author_name').val(response.data['author_name'])
+                    $('#author_url').val(response.data['author_url'])
+                    $('#myModal').data('bs.modal').isShown = true
+                    target.removeChild(spinner.el);
+                    $('#myModal').modal('hide');
+                    $('#submitModal').modal('show');
+
+                },
+                error: function(){
+                    $('#myModal').data('bs.modal').isShown = true
+                    target.removeChild(spinner.el);
+                    $('#myModal').modal('hide');
+                    alert('Sorry, something has gone wrong with response. please try later')
+                }
+            })
+        }
+    })
+
+    $('#submit_btn').click(function(){
+        var url = $('#song').val()
+        var target = document.getElementById('load-ajax')
+        var spinner = new Spinner().spin()
+        target.appendChild(spinner.el)
+        $('#submitModal').data('bs.modal').isShown = false;
+        var artist = $('#artist').val()
+        var title = $('#song_name').val()
+        var image = $('#song_image img').attr('src')
+        var provider_name = $('#provider_name').val();
+        var provider_url = $('#provider_url').val();
+        var html = $('#html').val()
+        var author_name = $('#author_name').val()
+        var author_url = $('#author_url').val()
+        $.ajax({
+            type:'get',
+            url: '/add_song_to_track',
+            data: 'title='+title+'&image='+image+'&provider_name='+provider_name+'&provider_url='+provider_url+'&author_name='+author_name+'&artist='+artist+'&author_url='+author_url,
+            success: function(response){
+                $('.recent_tracks').append("<div class='box' style='border:1px solid #808080; margin-bottom:10px;padding:10px'><div class='cover'><img height='110' width='100' src=' "+image+" '/></div><div class='song-info'><span class='the-artist' style='font-size:10'>"+artist+"</span></div>")
+                var container = document.querySelector('.recent_tracks');
+                var msnry = new Masonry( container, {
+                    // options
+                    itemSelector: '.box',
+                    "gutter" : 10
+                });
+                $('.menu-item-thumb-con iframe').last().height(166)
+                $('#submitModal').data('bs.modal').isShown = true
+                target.removeChild(spinner.el);
+                $('#submitModal').modal('hide');
+                $('.modal-backdrop').remove()
+//                window.location.href = window.location.pathname+"#songs_list"
+            },
+            error: function(){
+                $('#submitModal').data('bs.modal').isShown = true
+                target.removeChild(spinner.el);
+                $('#submitModal').modal('hide');
+                $('.modal-backdrop').remove()
+                alert('Sorry, something has gone wrong with response. please try later')
+            }
+        })
+    })
+</script>

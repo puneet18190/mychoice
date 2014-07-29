@@ -1,0 +1,79 @@
+<div class="container">
+  <h1> New Track</h1>
+  <div class="form-group well">
+    <%= form_for @track, url: {action: "create", controller: "tracks"}, :html => {:class => "form-horizontal"} do |f| %>
+      <div class="form-group">
+        <%= f.label :title, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :title, class: "form-control", placeholder: "Title" %>
+        </div>
+      </div>
+
+        <div class="form-group">
+          <%= f.label :artist, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= f.text_field :artist, class: "form-control", placeholder: "Artist" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :combined_truncated, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= f.text_field :combined_truncated, class: "form-control", placeholder: "Combined Truncated" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :large_img, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= f.text_field :large_img, class: "form-control", placeholder: "Large Image" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :medium_img, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= f.text_field :medium_img, class: "form-control", placeholder: "Medium Image" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :small_img, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= f.text_field :small_img, class: "form-control", placeholder: "Small Image" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :via, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= f.text_field :via, class: "form-control", placeholder: "Via" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :url, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= f.text_field :url, class: "form-control", placeholder: "Url" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :background, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= f.text_field :background, class: "form-control", placeholder: "Background" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :genre, class: "col-sm-2 control-label" %>
+          <div class="col-sm-10">
+            <%= select_tag("genre", options_from_collection_for_select(@genres, "id", "name")) %>
+          </div>
+        </div>
+
+      <div class="actions"><%= f.submit 'Save', class: "btn btn-primary"  %></div>
+
+    <%- end %>
+</div>
+</div>

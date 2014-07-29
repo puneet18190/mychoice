@@ -1,0 +1,2 @@
+      invoke  active_record
+      create    db/migrate/20140516121824_add_invite_user_to_user.rb

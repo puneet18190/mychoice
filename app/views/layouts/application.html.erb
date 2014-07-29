@@ -1,0 +1,28 @@
+<head>
+  <meta charset="utf-8">
+  <title>MyChoice</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag 'header', media: 'all' %>
+    <%= stylesheet_link_tag 'bootstrap', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+    <%= csrf_meta_tag %>
+</head>
+
+<body>
+    <%= render "layouts/header_nav" %>
+    <p class="alert-notice"><%= flash[:alert] %></p>
+
+    <%= yield %>
+</body>
+
+<script type="text/javascript">
+
+        $(document).ready(function(){
+            setTimeout(function(){
+                if($('.alert-notice').html() != null && $('.alert-notice').html() != ""){
+                    $('.alert-notice').slideUp();
+                }
+            }, 3000);
+        })
+
+</script>

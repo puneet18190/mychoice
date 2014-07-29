@@ -1,0 +1,34 @@
+<div id="container" class="js-masonry" data-masonry-options='{ "columnWidth": 60, "itemSelector": ".box", "gutter" : 10 }' style="margin-left:30px;margin-top:40px">
+<%  if @results.length > 0 %>
+  <%  if  (jams = @results['jams']).length > 0 %>
+    <% jams.each_with_index do |jam, index| %>
+      <div class="box" style="border:1px solid #808080; margin-bottom:10px;padding:10px">
+        <div class="cover">
+          <img src="<%= jam['jamvatarMedium'] %> " >
+          <!--<div class="hover-panel">-->
+            <!--<button class="play"></button>-->
+            <!--<button class="info"><i class="fa fa-info-circle"></i></button>-->
+            <!--<button class="favorite"><i class="fa fa-heart"></i></button>-->
+            <!--<button class="add"><i class="fa fa-plus"></i></button>-->
+          <!--</div>-->
+          <div class="info-panel">
+            <!--<button class="close"><i class="fa fa-times-circle"></i></button>-->
+            <!--<button class="report"><i class="fa fa-flag"></i></button>-->
+            <span class="uploader">Added by User</span></br>
+            <span class="source">16 day ago from <i class="fa fa-youtube-play"></i></span>
+          </div>
+          <!--<div class="corner"><span class="rank">1</span></div>-->
+        </div>
+        <div class="song-info" id="<%= index %>">
+          <span class="artist"><a href="add.php?id=<%= jam['id']%>"><%= jam['artist'] %></a> </span></br>
+          <span class="song"><%= jam['title'] %></span>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div>No Results were found!</div>
+  <% end %>
+<% else %>
+    <p> No results found </p>
+<% end %>
+</div>

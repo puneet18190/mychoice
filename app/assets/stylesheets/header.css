@@ -1,0 +1,77 @@
+.nav-header {
+    background: -moz-linear-gradient(-90deg, #6A7176, #4D5256) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border-bottom: 1px solid #44484B;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
+    display: table;
+    height: 20px;
+    overflow: visible;
+    padding: 5px 0;
+    position: inherit;
+    text-shadow: 0 1px 0 #000000;
+    width: 100%;
+    z-index: 900;"
+}
+
+.nav-header h1{
+    color: #CDCDCD;
+    display: table-cell;
+    font-size: 1.3em;
+    font-weight: normal;
+    line-height: 1.2;
+    margin-bottom: 0;
+    margin-right: 20px;
+    padding: 3px 30px 0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.nav-header .utility_nav {
+    color: #AAAAAA;
+    display: table-cell;
+    margin: 0;
+    padding: 0 26px 0 0;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.nav-header .utility_nav a{
+    color: #CDCDCD
+}
+
+.nav-header #tabs {
+    width: 100%;
+}
+.nav-header ul.tabs {
+    display: table-cell;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+.nav-header .header-item {
+    height: 20px;
+    position: relative;
+    top: 2px;
+}
+
+.nav-header a {
+    color:#CDCDCD;
+}
+
+.nav-header ul.tabs > li {
+    display: inline-block;
+    font-size: 1em;
+    margin-bottom: 5px;
+    margin-right: 4px;
+    margin-top: 5px;
+    position: relative;
+}
+
+.nav-header ul.utility_nav > li {
+    display: inline-block;
+    font-size: 1em;
+    margin-bottom: 5px;
+    margin-right: 4px;
+    margin-top: 5px;
+    position: relative;
+}

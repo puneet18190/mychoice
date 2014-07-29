@@ -1,0 +1,20 @@
+<div class="headerin" style="width:100%">
+  <% if user_signed_in? %>
+      <div class="nav-header">
+        <h1>Newappetite New</h1>
+        <ul class="header-item tabs" id="tabs">
+          <% if current_user.superadmin == true %>
+            <li><%= link_to 'Admin', admin_root_path, method: :get %></li>
+          <% end %>
+          <li><%= link_to 'Playlists', playlists_path, method: :get %></li>
+          <li><%= link_to 'Tracks', "/tracks", method: :get %></li>
+        </ul>
+        <ul class="utility_nav">
+          <li><%= link_to current_user.email, "/users/edit" %></li>
+          <li><%= link_to 'Logout', destroy_user_session_path, method: :delete %></li>
+        </ul>
+      </div>
+  <% else %>
+      <div class="login" href="/users/login" data-fancybox-type="ajax" ><%= link_to 'Login', new_user_session_path%></div>
+  <% end %>
+ </div>
